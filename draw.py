@@ -1,6 +1,8 @@
 from display import *
 from matrix import *
 
+def cross_product(A,B):
+    return A[0]*B[0]+A[1]*B[1]+A[2]*B[2]
 
 def add_polygon( polygons, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point(polygons,x0,y0,z0)
@@ -8,10 +10,12 @@ def add_polygon( polygons, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point(polygons,x2,y2,z2)
 
 def draw_polygons( polygons, screen, color ):
-    for polygon in range(polygons)-2:
-        draw_line(int(x0),int(y0),int(x1),int(y),screen,color)
-        draw_line(int(x0),int(y0),int(x1),int(y1),screen,color)
-        draw_line(int(x[1]),int(y[1]),int(x[2]),int(y[2]),screen,color)
+    i = 0
+    while i < range(polygons)-2:
+        draw_line(int(polygon[i][0]),int(polygon[i][1]),int(polygon[i+1][0]),int(polygon[i+1][1]),screen,color)
+        draw_line(int(polygon[i][0]),int(polygon[i][1]),int(polygon[i+2][0]),int(polygon[i+2][1]),screen,color)
+        draw_line(int(polygon[i+2][0]),int(polygon[i+2][1]),int(polygon[i+1][0]),int(polygon[i+1][1]),screen,color)
+        i+=3
 
 
 def add_box( polygons, x, y, z, width, height, depth ):
@@ -20,16 +24,12 @@ def add_box( polygons, x, y, z, width, height, depth ):
     z1 = z + depth
 
     #front
-    add_edge(polygons, x, y, z, x1, y, z)
-    add_edge(polygons, x, y1, z, x1, y1, z)
-    add_edge(polygons, x1, y, z, x1, y1, z)
-    add_edge(polygons, x, y, z, x, y1, z)
+    add_polygon(polygons,x,y,z,x1,y1,z,x1,y,z)
+    add_polygon(polygons,x,y,z,x,y1,z,x1,y1,z)
 
     #back
-    add_edge(polygons, x, y, z1, x1, y, z1)
-    add_edge(polygons, x, y1, z1, x1, y1, z1)
-    add_edge(polygons, x1, y, z1, x1, y1, z1)
-    add_edge(polygons, x, y, z1, x, y1, z1)
+    add_polygon(polygons,x,y,z1,x1,y1,z1,x1,y,z1)
+    add_polygon(polygons,x,y,z1,x,y1,z1,x1,y1,z1)
 
     #sides
     add_edge(polygons, x, y, z, x, y, z1)
